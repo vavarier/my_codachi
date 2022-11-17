@@ -64,7 +64,6 @@ const animationDefaults = {
 }
 
 const egg: PetLevel = {
-  xp: 0,
   defaultState: 'idle',
   animations: {
     idle: {
@@ -92,59 +91,6 @@ const transition: PetAnimation = {
 
 export const petTypes = new Map<string, Pet>([
   [
-    'monster1',
-    {
-      levels: new Map([
-        [0, egg],
-        [
-          1,
-          {
-            xp: 35,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster1phase1',
-                speed: 4,
-              },
-            },
-          },
-        ],
-        [
-          2,
-          {
-            xp: 150000,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster1phase2',
-                speed: 3,
-              },
-            },
-          },
-        ],
-        [
-          3,
-          {
-            xp: 240000,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster1phase3',
-                speed: 3,
-              },
-            },
-          },
-        ],
-      ]),
-    },
-  ],
-  [
     'monster2',
     {
       levels: new Map([
@@ -152,15 +98,13 @@ export const petTypes = new Map<string, Pet>([
         [
           1,
           {
-            xp: 35,
             defaultState: 'walking',
             animations: {
               transition,
               walking: {
                 ...animationDefaults,
                 gif: 'monster2phase1',
-                width: 64,
-                speed: 3,
+                speed: 4,
               },
             },
           },
@@ -168,143 +112,27 @@ export const petTypes = new Map<string, Pet>([
         [
           2,
           {
-            xp: 100000,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster2phase2',
-                width: 64,
-                speed: 3,
-              },
-            },
-          },
-        ],
-        [
-          3,
-          {
-            xp: 600000,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster2phase3',
-                width: 64,
-                speed: 3,
-              },
-            },
-          },
-        ],
-      ]),
-    },
-  ],
-  [
-    'monster3',
-    {
-      levels: new Map([
-        [0, egg],
-        [
-          1,
-          {
-            xp: 35,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster3phase1',
-                width: 64,
-                speed: 1,
-              },
-            },
-          },
-        ],
-        [
-          2,
-          {
-            xp: 599900,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster3phase2',
-                width: 64,
-                speed: 0,
-              },
-            },
-          },
-        ],
-        [
-          3,
-          {
-            xp: 600000,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster3phase3',
-                width: 64,
-                speed: 2,
-              },
-            },
-          },
-        ],
-      ]),
-    },
-  ],
-  [
-    'monster4',
-    {
-      levels: new Map([
-        [0, egg],
-        [
-          1,
-          {
-            xp: 35,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster4phase1',
-                width: 64,
-                speed: 3,
-              },
-            },
-          },
-        ],
-        [
-          2,
-          {
-            xp: 150000,
             defaultState: 'walking',
             animations: {
               transition,
               walking: {
                 ...animationDefaults,
                 gif: 'monster4phase2',
-                width: 64,
                 speed: 3,
               },
             },
           },
         ],
         [
-          3,
+          5,
           {
-            xp: 240000,
             defaultState: 'walking',
             animations: {
               transition,
               walking: {
                 ...animationDefaults,
-                gif: 'monster4phase3',
-                width: 64,
-                speed: 4,
+                gif: 'monster3phase3',
+                speed: 3,
               },
             },
           },
@@ -312,70 +140,12 @@ export const petTypes = new Map<string, Pet>([
       ]),
     },
   ],
-  [
-    'monster5',
-    {
-      levels: new Map([
-        [0, egg],
-        [
-          1,
-          {
-            xp: 35,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster5phase1',
-                width: 64,
-                height: 66,
-                speed: 2,
-              },
-            },
-          },
-        ],
-        [
-          2,
-          {
-            xp: 150000,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster5phase2',
-                speed: 3,
-                height: 100,
-                width: 100,
-              },
-            },
-          },
-        ],
-        [
-          3,
-          {
-            xp: 240000,
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster5phase3',
-                speed: 3,
-                height: 135,
-                width: 125,
-              },
-            },
-          },
-        ],
-      ]),
-    },
-  ],
+
 ])
 
 export const randomPetType = (): PetType =>
   Array.from(petTypes.keys())[
-    Math.floor(Math.random() * petTypes.size)
+  Math.floor(Math.random() * petTypes.size)
   ] as PetType
 
 export const randomPetName = (): string => {
@@ -396,7 +166,7 @@ export const getPetAnimations = ({
     throw new Error(`Pet type not found: ${userPet.type}`)
   }
 
-  const levelFound = petTypeFound.levels.get(userPet.level)
+  const levelFound = petTypeFound.levels.get(userPet.level) || petTypeFound.levels.get(userPet.rank) 
   if (!levelFound) {
     throw new Error(
       `Pet level not found for pet type ${userPet.type}: ${userPet.level}`
@@ -426,6 +196,7 @@ export const generatePet = ({ name, type }: UserPetArgs): UserPet => ({
   direction: Direction.right,
   level: 0,
   xp: 0,
+  rank: 0,
   // All level 0 characters require this state
   state: 'idle',
   isTransitionIn: true,
@@ -453,21 +224,23 @@ export const getLevel = ({
   return levelFound
 }
 
+
+export const getNextLevelCap = (actualLevel: number) => {
+  return actualLevel * 10 + 1
+}
+
 export const mutateLevel = ({ userPet }: { userPet: UserPet }) => {
   const nextLevelFound = getLevel({
     petType: userPet.type,
     level: userPet.level + 1,
   })
-
-  if (!nextLevelFound) {
-    return
-  }
-
-  if (userPet.xp >= nextLevelFound.xp) {
+  if (userPet.xp >= getNextLevelCap(userPet.level)) {
     userPet.level += 1
     userPet.xp = 0
-    userPet.state = nextLevelFound.defaultState
+    if (!nextLevelFound) return
+    userPet.rank = userPet.level
     userPet.speed = nextLevelFound.animations[userPet.state].speed || 0
+    userPet.state = nextLevelFound.defaultState
     userPet.isTransitionIn = true
   }
 }

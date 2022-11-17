@@ -18,7 +18,6 @@ export type PetAnimation = {
 }
 
 export type PetLevel = {
-  xp: number
   defaultState: PetState
   animations: {
     [name: string]: PetAnimation
@@ -35,6 +34,7 @@ export interface UserPetBaseProps {
   direction: number
   level: number
   xp: number
+  rank: number
   state: PetState
   isTransitionIn: boolean
 }
