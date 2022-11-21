@@ -1,13 +1,13 @@
 {
-	"name": "codachi",
-	"displayName": "codachi",
+	"name": "enhancedcodachi",
+	"displayName": "Enhanced Codachi",
 	"description": "Your digital pet inside VSCode.",
 	"repository": {
 		"type": "github",
-		"url": "https://github.com/blairjordan/codachi"
+		"url": "https://github.com/vavarier/my_codachi"
 	},
-	"publisher": "pegleg",
-	"version": "1.2.1",
+	"publisher": "vanouri",
+	"version": "0.0.2",
 	"engines": {
 		"vscode": "^1.64.0"
 	},

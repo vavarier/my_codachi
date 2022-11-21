@@ -6,8 +6,7 @@ Adds cute monster pets to your workspace to encourage productivity.
 
 These pets thrive off productivity. Write code to gain XP and level up!
 
-![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/pegleg.codachi)
-![Codachi Twitter](https://img.shields.io/twitter/url?label=codachi_monster&style=social&url=https%3A%2F%2Ftwitter.com%2Fcodachi_monster)
+![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/vanouri.enhancedcodachi)
 ![Codachi Stars](https://img.shields.io/github/stars/blairjordan/codachi?style=social)
 
 
@@ -47,4 +46,4 @@ Your pet will gain XP as you code.
 
 ## Credits
 
-Codachi is based on [vscode-pets](https://github.com/tonybaloney/vscode-pets) developed by [@tonybaloney](https://github.com/tonybaloney).
+It's a fork of [codachi](https://github.com/blairjordan/codachi)

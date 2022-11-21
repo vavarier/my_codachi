@@ -6,29 +6,7 @@ import {
   PetAnimation,
   UserPet,
   PetLevel,
-  Gifs,
 } from './'
-
-export const gifs: Gifs = {
-  egg1: 'egg1.gif',
-  dust1: 'dust1.gif',
-  dust2: 'dust2.gif',
-  monster1phase1: 'm1d1.gif',
-  monster1phase2: 'm1d2.gif',
-  monster1phase3: 'm1d3.gif',
-  monster2phase1: 'm2d1.gif',
-  monster2phase2: 'm2d2.gif',
-  monster2phase3: 'm2d3.gif',
-  monster3phase1: 'm3d1.gif',
-  monster3phase2: 'm3d2.gif',
-  monster3phase3: 'm3d3.gif',
-  monster4phase1: 'm4d1.gif',
-  monster4phase2: 'm4d2.gif',
-  monster4phase3: 'm4d3.gif',
-  monster5phase1: 'm5d1.gif',
-  monster5phase2: 'm5d2.gif',
-  monster5phase3: 'm5d3.gif',
-}
 
 export const petNames = [
   'boo',
@@ -63,16 +41,33 @@ const animationDefaults = {
   offset: 0,
 }
 
+const egg2: PetLevel = {
+  defaultState: 'idle',
+  animations: {
+    idle: {
+      ...animationDefaults,
+      gif: 'pet1/rank0.gif',
+    },
+    transition: {
+      ...animationDefaults,
+      gif: 'dust1.gif',
+      offset: 6,
+      width: 100,
+      height: 100,
+    },
+  },
+}
+
 const egg: PetLevel = {
   defaultState: 'idle',
   animations: {
     idle: {
       ...animationDefaults,
-      gif: 'egg1',
+      gif: 'egg1.gif',
     },
     transition: {
       ...animationDefaults,
-      gif: 'dust1',
+      gif: 'dust1.gif',
       offset: 6,
       width: 100,
       height: 100,
@@ -83,64 +78,41 @@ const egg: PetLevel = {
 // Generic evolution transition
 const transition: PetAnimation = {
   ...animationDefaults,
-  gif: 'dust2',
+  gif: 'dust2.gif',
   offset: -80,
   width: 280,
   height: 100,
 }
 
+const getPet = () => {
+
+  const petframe = Array.from("123456")
+
+  const res = new Map(petframe.map((file, index) => !index ? [0, egg2] : [
+    index * 3,
+    {
+      defaultState: 'walking',
+      animations: {
+        transition,
+        walking: {
+          ...animationDefaults,
+          gif: `pet1/rank${index}.gif`,
+          speed: 3,
+        },
+      },
+    } as PetLevel,
+  ]))
+  console.log(res, petframe)
+  return res
+}
+
 export const petTypes = new Map<string, Pet>([
   [
-    'monster2',
+    'monster3',
     {
-      levels: new Map([
-        [0, egg],
-        [
-          1,
-          {
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster2phase1',
-                speed: 4,
-              },
-            },
-          },
-        ],
-        [
-          2,
-          {
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster4phase2',
-                speed: 3,
-              },
-            },
-          },
-        ],
-        [
-          5,
-          {
-            defaultState: 'walking',
-            animations: {
-              transition,
-              walking: {
-                ...animationDefaults,
-                gif: 'monster3phase3',
-                speed: 3,
-              },
-            },
-          },
-        ],
-      ]),
+      levels: getPet()
     },
-  ],
-
+  ]
 ])
 
 export const randomPetType = (): PetType =>
@@ -166,19 +138,19 @@ export const getPetAnimations = ({
     throw new Error(`Pet type not found: ${userPet.type}`)
   }
 
-  const levelFound = petTypeFound.levels.get(userPet.level) || petTypeFound.levels.get(userPet.rank) 
+  const levelFound = petTypeFound.levels.get(userPet.level) || petTypeFound.levels.get(userPet.rank)
   if (!levelFound) {
     throw new Error(
       `Pet level not found for pet type ${userPet.type}: ${userPet.level}`
     )
   }
+  levelFound.animations.transition.gif = petTypeFound.levels.get(userPet.level) ? 'dust2.gif' : 'dust1.gif'
 
   if (!(userPet.state in levelFound.animations)) {
     throw new Error(
       `Animation not found for pet type ${userPet.type}, level ${userPet.level}: ${userPet.state}`
     )
   }
-
   const transition =
     'transition' in levelFound.animations
       ? levelFound.animations.transition
@@ -226,7 +198,7 @@ export const getLevel = ({
 
 
 export const getNextLevelCap = (actualLevel: number) => {
-  return actualLevel * 10 + 1
+  return Math.pow(Math.log(actualLevel * 3 + 1), 1.5) * 100
 }
 
 export const mutateLevel = ({ userPet }: { userPet: UserPet }) => {
@@ -237,10 +209,11 @@ export const mutateLevel = ({ userPet }: { userPet: UserPet }) => {
   if (userPet.xp >= getNextLevelCap(userPet.level)) {
     userPet.level += 1
     userPet.xp = 0
+    userPet.isTransitionIn = true
+
     if (!nextLevelFound) return
     userPet.rank = userPet.level
-    userPet.speed = nextLevelFound.animations[userPet.state].speed || 0
     userPet.state = nextLevelFound.defaultState
-    userPet.isTransitionIn = true
+    userPet.speed = nextLevelFound.animations[nextLevelFound.defaultState]?.speed || 0
   }
 }

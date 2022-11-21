@@ -1,4 +1,5 @@
 export type State = {
+  file: string[]
   userPet: UserPet
   basePetUri: string
   intervalId?: NodeJS.Timeout | undefined

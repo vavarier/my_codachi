@@ -1,8 +1,8 @@
+import * as fs from 'fs';
 import {
   UserPet,
   setState,
   getPetAnimations,
-  gifs,
   generatePet,
   transforms,
   DOM,
@@ -11,9 +11,10 @@ import {
 } from './'
 import { initializeState } from './state'
 
-const defaultState = {
+const defaultState ={
   userPet: generatePet({ name: 'unknown', type: 'unknown' }),
   basePetUri: '',
+  file: [""]
 }
 
 initializeState(defaultState)
@@ -79,7 +80,7 @@ const setImage = ({
 }) => {
   const { basePetUri } = state
 
-  selector.src = `${basePetUri}/${gifs[animation.gif]}`
+  selector.src = `${basePetUri}/${animation.gif}`
   selector.width = animation.width
   selector.style.minWidth = `${animation.width}px`
   selector.height = animation.height
@@ -130,7 +131,6 @@ export const app = ({
   if (userPet) {
     addPetToPanel({ userPet })
   }
-
   // Handle messages sent from the extension to the webview
   window.addEventListener('message', (event): void => {
     const { command, data } = event.data // The data that the extension sent
