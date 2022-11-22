@@ -1,5 +1,4 @@
 import {
-  PetType,
   Pet,
   UserPetArgs,
   Direction,
@@ -7,72 +6,13 @@ import {
   UserPet,
   PetLevel,
 } from './'
-
-export const petNames = [
-  'boo',
-  'nacho',
-  'gary',
-  'fudge',
-  'neko',
-  'pip',
-  'bibo',
-  'fifi',
-  'jax',
-  'bobba',
-  'gidget',
-  'mina',
-  'crumb',
-  'zimbo',
-  'dusty',
-  'brock',
-  'otis',
-  'marvin',
-  'smokey',
-  'barry',
-  'tony',
-  'dusty',
-  'mochi',
-]
+import { allPets } from './pets_dataset'
 
 const animationDefaults = {
   width: 75,
   height: 64,
   speed: 0,
   offset: 0,
-}
-
-const egg2: PetLevel = {
-  defaultState: 'idle',
-  animations: {
-    idle: {
-      ...animationDefaults,
-      gif: 'pet1/rank0.gif',
-    },
-    transition: {
-      ...animationDefaults,
-      gif: 'dust1.gif',
-      offset: 6,
-      width: 100,
-      height: 100,
-    },
-  },
-}
-
-const egg: PetLevel = {
-  defaultState: 'idle',
-  animations: {
-    idle: {
-      ...animationDefaults,
-      gif: 'egg1.gif',
-    },
-    transition: {
-      ...animationDefaults,
-      gif: 'dust1.gif',
-      offset: 6,
-      width: 100,
-      height: 100,
-    },
-  },
 }
 
 // Generic evolution transition
@@ -84,46 +24,63 @@ const transition: PetAnimation = {
   height: 100,
 }
 
-const getPet = () => {
+const getEgg = (name: string): PetLevel => ({
+  defaultState: 'idle',
+  animations: {
+    idle: {
+      ...animationDefaults,
+      gif: `${name}/rank0.gif`,
+    },
+    transition: {
+      ...animationDefaults,
+      gif: 'dust1.gif',
+      offset: 6,
+      width: 100,
+      height: 100,
+    },
+  },
+})
 
-  const petframe = Array.from("123456")
+const getPetContent = (name: string, nbFrame: number) => {
 
-  const res = new Map(petframe.map((file, index) => !index ? [0, egg2] : [
-    index * 3,
-    {
+  const egg = getEgg(name)
+  const res = [egg]
+  for (let i = 1; i < nbFrame; i += 1) {
+    res.push({
       defaultState: 'walking',
       animations: {
         transition,
         walking: {
           ...animationDefaults,
-          gif: `pet1/rank${index}.gif`,
+          width: Math.min(75 + i * 3, 135),
+          height: Math.min(64 + i *3, 125),
+          gif: `${name}/rank${i}.gif`,
           speed: 3,
         },
       },
-    } as PetLevel,
+    } as PetLevel)
+  }
+
+  const mapedPets = new Map(res.map((pet, index) => [
+    index <= 1 ? index : index * 3,
+    pet
   ]))
-  console.log(res, petframe)
-  return res
+  return mapedPets
 }
 
-export const petTypes = new Map<string, Pet>([
-  [
-    'monster3',
+export const petTypes = new Map<string, Pet>(
+  allPets.map((pet) => [
+    pet.name,
     {
-      levels: getPet()
-    },
-  ]
-])
+      levels: getPetContent(pet.name, pet.nbGif)
+    }
+  ])
+)
 
-export const randomPetType = (): PetType =>
+export const randomPetType = (): string =>
   Array.from(petTypes.keys())[
   Math.floor(Math.random() * petTypes.size)
-  ] as PetType
-
-export const randomPetName = (): string => {
-  const name = petNames[Math.floor(Math.random() * petNames.length)]
-  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
-}
+  ] as string
 
 export const getPetAnimations = ({
   userPet,
@@ -180,7 +137,7 @@ export const getLevel = ({
   petType,
   level,
 }: {
-  petType: PetType
+  petType: string
   level: number
 }) => {
   const petTypeFound = petTypes.get(petType)

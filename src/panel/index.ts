@@ -4,14 +4,12 @@ import {
   generatePet,
   mutateLevel,
   randomPetType,
-  randomPetName,
 } from './pets'
 import { transforms } from './transforms'
 import {
   Pet,
   PetState,
   UserPetBaseProps,
-  PetType,
   UserPetArgs,
   UserPet,
   Direction,
@@ -32,11 +30,9 @@ export {
   generatePet,
   mutateLevel,
   randomPetType,
-  randomPetName,
   Pet,
   PetState,
   UserPetBaseProps,
-  PetType,
   UserPetArgs,
   UserPet,
   Direction,

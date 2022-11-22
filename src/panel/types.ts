@@ -1,3 +1,5 @@
+import { allPets, petData } from "./pets_dataset"
+
 export type State = {
   file: string[]
   userPet: UserPet
@@ -40,11 +42,9 @@ export interface UserPetBaseProps {
   isTransitionIn: boolean
 }
 
-export type PetType = 'monster1' | 'monster2' | 'unknown'
-
 export interface UserPetArgs {
   name: string
-  type: PetType
+  type: string
 }
 
 export type UserPet = UserPetBaseProps & UserPetArgs

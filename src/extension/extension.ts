@@ -7,15 +7,17 @@ import {
   generatePet,
   mutateLevel,
   randomPetType,
-  randomPetName,
   UserPet,
 } from '../panel'
+import { allPets } from '../panel/pets_dataset'
 
-const randomPet = (): UserPet =>
-  generatePet({
-    type: randomPetType(),
-    name: randomPetName(),
+const randomPet = (): UserPet => {
+  const type = randomPetType()
+  return generatePet({
+    type: type,
+    name: allPets.find((pet) => pet.name === type)?.name || "pouet",
   })
+}
 
 const getPetFromStorage = (storage: vscode.Memento): UserPet => {
   const storedPets = storage.get('pets')
@@ -190,11 +192,9 @@ class PetPanel {
     <head>
       <meta charset="UTF-8">
       <script  nonce="${nonce}">var exports = {};</script>
-      <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${
-        this.panel.webview.cspSource
-      }; img-src ${
-      this.panel.webview.cspSource
-    } https:; script-src 'nonce-${nonce}';">
+      <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${this.panel.webview.cspSource
+      }; img-src ${this.panel.webview.cspSource
+      } https:; script-src 'nonce-${nonce}';">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link href="${stylesUri}" rel="stylesheet">
       <title>codachi</title>
@@ -213,8 +213,8 @@ class PetPanel {
       
       <script nonce="${nonce}" src="${scriptUri}"></script>
       <script nonce="${nonce}">codachiApp.app({ basePetUri: '${basePetUri}', userPet: ${JSON.stringify(
-      this.getUserPet()
-    )} });</script>
+        this.getUserPet()
+      )} });</script>
     </body>
     </html>`
   }
@@ -298,4 +298,4 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
