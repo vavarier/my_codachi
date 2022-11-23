@@ -7,7 +7,7 @@
 		"url": "https://github.com/vavarier/my_codachi"
 	},
 	"publisher": "vanouri",
-	"version": "0.0.3",
+	"version": "0.0.5",
 	"engines": {
 		"vscode": "^1.64.0"
 	},

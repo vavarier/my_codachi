@@ -53,7 +53,7 @@ const getPetContent = (name: string, nbFrame: number) => {
         walking: {
           ...animationDefaults,
           width: Math.min(75 + i * 3, 135),
-          height: Math.min(64 + i *3, 125),
+          height: Math.min(64 + i * 3, 125),
           gif: `${name}/rank${i}.gif`,
           speed: 3,
         },
@@ -62,7 +62,7 @@ const getPetContent = (name: string, nbFrame: number) => {
   }
 
   const mapedPets = new Map(res.map((pet, index) => [
-    index <= 1 ? index : index * 3,
+    index <= 1 ? index : index * 3 - 2,
     pet
   ]))
   return mapedPets
@@ -94,18 +94,18 @@ export const getPetAnimations = ({
   if (!petTypeFound) {
     throw new Error(`Pet type not found: ${userPet.type}`)
   }
-
-  const levelFound = petTypeFound.levels.get(userPet.level) || petTypeFound.levels.get(userPet.rank)
+  const levelFound = petTypeFound.levels.get(userPet.level > 1 ? userPet.rank * 3 - 2 : userPet.level)
   if (!levelFound) {
     throw new Error(
-      `Pet level not found for pet type ${userPet.type}: ${userPet.level}`
+      `Pet level not found for pet type ${userPet.type}: ${userPet.rank}`
     )
   }
-  levelFound.animations.transition.gif = petTypeFound.levels.get(userPet.level) ? 'dust2.gif' : 'dust1.gif'
+
+  levelFound.animations.transition.gif = (userPet.level - 1 )% 3 ? 'dust1.gif' : 'dust2.gif'
 
   if (!(userPet.state in levelFound.animations)) {
     throw new Error(
-      `Animation not found for pet type ${userPet.type}, level ${userPet.level}: ${userPet.state}`
+      `Animation not found for pet type ${userPet.type}, level ${userPet.rank}: ${userPet.state}`
     )
   }
   const transition =
@@ -135,17 +135,21 @@ export const generatePet = ({ name, type }: UserPetArgs): UserPet => ({
 
 export const getLevel = ({
   petType,
-  level,
+  rank,
 }: {
   petType: string
-  level: number
+  rank: number | null
 }) => {
+  if (!rank) {
+    return undefined
+  }
+  
   const petTypeFound = petTypes.get(petType)
   if (!petTypeFound) {
     return undefined
   }
-
-  const levelFound = petTypeFound.levels.get(level)
+  console.log(rank)
+  const levelFound = petTypeFound.levels.get(rank === 1 ? 1: rank *3 -2)
   if (!levelFound) {
     return undefined
   }
@@ -155,21 +159,23 @@ export const getLevel = ({
 
 
 export const getNextLevelCap = (actualLevel: number) => {
-  return Math.pow(Math.log(actualLevel * 3 + 1), 1.5) * 100
+  return 10//Math.pow(Math.log(actualLevel * 3 + 1), 1.5) * 100
 }
 
 export const mutateLevel = ({ userPet }: { userPet: UserPet }) => {
   const nextLevelFound = getLevel({
     petType: userPet.type,
-    level: userPet.level + 1,
+    rank:  userPet.level >= 1  && (userPet.level + 1) % 3 ? null :userPet.rank + 1,
   })
   if (userPet.xp >= getNextLevelCap(userPet.level)) {
     userPet.level += 1
     userPet.xp = 0
     userPet.isTransitionIn = true
+    const petData = allPets.find((pet) => pet.name === userPet.type)
+    userPet.rank = petData?.loop && userPet.rank +1 >= petData.nbGif ? 0 : userPet.rank
 
     if (!nextLevelFound) return
-    userPet.rank = userPet.level
+    userPet.rank = userPet.rank + 1
     userPet.state = nextLevelFound.defaultState
     userPet.speed = nextLevelFound.animations[nextLevelFound.defaultState]?.speed || 0
   }
